@@ -7,7 +7,8 @@
     "require": {
         "php": ">=5.6.4",
         "laravel/lumen-framework": "5.4.*",
-        "vlucas/phpdotenv": "~2.2"
+        "vlucas/phpdotenv": "~2.2",
+        "ext-memcached": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -28,8 +29,7 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ],
-        "post-install-cmd": "./artisan migrate"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true

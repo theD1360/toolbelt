@@ -28,7 +28,8 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
-        ]
+        ],
+        "post-install-cmd": "./artisan migrate"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

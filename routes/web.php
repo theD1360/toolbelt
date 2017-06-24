@@ -12,5 +12,7 @@
 */
 
 $app->get('/', function () use ($app) {
-    return $app->version();
+    $config = $app->make(\App\Helpers\ConfigHelper::class);
+    $config->set("private", !$config->get('private'));
+    return json_encode($config->get());
 });

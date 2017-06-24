@@ -14,5 +14,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $this->app->singleton(App\Helpers\ConfigHelper::class, function ($app) {
+            return new ConfigHelper;
+        });
     }
 }

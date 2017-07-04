@@ -29,4 +29,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function files()
+    {
+        return $this->belongsToMany('App\Models\FilesModel')->withPivot('short_name', 'local_path');
+    }
 }

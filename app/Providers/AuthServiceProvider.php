@@ -36,9 +36,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('api', function (Request $request) {
             $authHeader = $request->header('Authorization');
             if ($authHeader) {
-                $authToken = substr($authHeader, 8);
+                $authToken = substr($authHeader, 6);
                 $parser  = new Parser();
-                $token = $parser->parse($authToken);
+                $token = $parser->parse(trim($authToken));
                 if (($token->verify(new Sha256(), getenv('JWT_SECRET')))) {
                     return \App\Models\User::where('email', $token->getClaim('email'))->first();
                 }

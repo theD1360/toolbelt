@@ -47,28 +47,29 @@ class AuthController extends Controller {
         {
             $response->setStatusCode(IlluminateResponse::HTTP_BAD_REQUEST);
             return $response->setContent([
-                'error' => [
-                    'message'     => 'Invalid auth',
-                    'status_code' => IlluminateResponse::HTTP_BAD_REQUEST
-                ]]
-            );
+                'error' => 'Invalid auth'
+            ]);
         }
 
         $credentials = $this->getCredentials($request);
 
         $userModel = new User();
-        $user = $userModel->where('email', 'like', $credentials['email'])
+        $users = $userModel->where('email', 'like', $credentials['email'])
             ->where('password', hash_pw($credentials['password']))
             ->get();
+        $user = $users->first();
+
+        // no user then error out
+        if ($user == null) {
+            $response->setStatusCode(IlluminateResponse::HTTP_BAD_REQUEST);
+            return $response->setContent([
+                "error" => "invalid credentials"
+            ]);
+        }
 
         try
         {
-            // attempt to verify the credentials and create a token for the user
-            if ( ! $token = $this->createToken($user->first()))
-            {
-                $response->setStatusCode(401);
-                return $response->setContent(['error' => 'invalid_credentials']);
-            }
+            $token = $this->createToken($user);
         }
         catch (\Exception $e)
         {
@@ -98,8 +99,8 @@ class AuthController extends Controller {
      */
     protected function createToken(User $user)
     {
-        return $this->jwt->setIssuer('http://butts.com') // Configures the issuer (iss claim)
-            ->setAudience('http://example.org') // Configures the audience (aud claim)
+        return $this->jwt->setIssuer(getenv('JWT_ISSUER_URL')) // Configures the issuer (iss claim)
+            ->setAudience(getenv('JWT_AUDIENCE_URL')) // Configures the audience (aud claim)
             ->setIssuedAt(time()) // Configures the time that the token was issue (iat claim)
             ->setNotBefore(time() + 60) // Configures the time that the token can be used (nbf claim)
             ->setExpiration(time() + 3600) // Configures the expiration time of the token (nbf claim)

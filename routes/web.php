@@ -42,6 +42,21 @@ $app->post('/user/register', function (\Illuminate\Http\Request $request, \Illum
 $app->post('/auth/login', "Auth\\AuthController@postLogin");
 
 
-$app->get('/user/profile', ['middleware'=>'auth', function() {
-    return "hi!";
-}]);
+
+$app->group(['prefix' => 'user', "middleware" => "auth"], function() use ($app) {
+
+    $app->group(['prefix' => 'files'], function() use ($app) {
+        $app->get("/", "User\\Files@index");
+        $app->post("/", "User\\Files@create");
+
+
+    });
+
+
+
+
+    $app->get('/profile', ['middleware'=>'auth', function() {
+        return "hi!";
+    }]);
+
+});

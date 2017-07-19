@@ -10,17 +10,18 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FilesModel extends Model
+class File extends Model
 {
-    protected $table = 'files';
-
+    use SoftDeletes;
     /**
      * The roles that belong to the user.
      */
     public function user()
     {
-        return $this->belongsToMany('App\Models\User')->withPivot('short_name', 'local_path');
+        return $this->belongsToMany('App\Models\User');
     }
 
 }

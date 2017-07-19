@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\ConfigModel;
+use App\Models\Config;
 
 class ConfigHelper {
 
@@ -10,7 +10,7 @@ class ConfigHelper {
 
     public function __construct()
     {
-            $this->configModel = new ConfigModel;
+            $this->configModel = new Config;
     }
 
     public function get($keyval = "%")
@@ -40,7 +40,7 @@ class ConfigHelper {
             $setting = $matches->first();
 
         } else {
-            $setting = new ConfigModel();
+            $setting = new Config();
         }
 
         $setting->key = $keyval;

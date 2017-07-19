@@ -15,6 +15,10 @@ class AddFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('directory_id');
+            $table->string('filename');
+            $table->string('origin_path');
             $table->string('ipfs_hash');
             $table->string('type');
             $table->integer('filesize');

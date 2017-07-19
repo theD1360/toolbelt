@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\User;
 
 
-use App\Models\FilesModel;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,38 +17,47 @@ class Files
 {
 
     /**
-     * @var \App\Models\FilesModel;
+     * @var \App\Models\File;
      */
-    protected $filesModel;
+    protected $File;
 
-    public function __construct(FilesModel $files)
+    public function __construct(File $files)
     {
-        $this->filesModel = $files;
+        $this->File = $files;
     }
 
     public function index(Response $response, Request $request) {
         $user = $request->user();
 
-        return $response->setContent($user->files);
+        $files = $user->files->each(function($file){
+            $file->file;
+        });
+
+        return $response->setContent($files);
     }
 
     public function create(Response $response, Request $request) {
         $user = $request->user();
 
 
-        $file = new FilesModel();
+        $file = new File();
+        $file->user_id = $user->id;
+        $file->directory_id = $request->input('directory_id', $user->directory->first()->id);
+        $file->filename =  $request->input('short_name');
+        $file->origin_path = $request->input('local_path');
         $file->ipfs_hash = $request->input('ipfs_hash');
         $file->type = $request->input('type');
         $file->filesize =  $request->input('filesize');
+        $file->save();
 
-        $user->files()->save($file, ['short_name' => $request->input('short_name'), "local_path" => $request->input('local_path')]);
+
 
         return $response->setContent($file);
 
     }
 
     public function read() {
-        $this->filesModel->find();
+        $this->File->find();
     }
 
     public function update() {

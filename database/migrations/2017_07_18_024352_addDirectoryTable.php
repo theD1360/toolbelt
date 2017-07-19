@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Kalnoy\Nestedset\NestedSet;
 
-class AddUserToFilesTable extends Migration
+class AddDirectoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,13 @@ class AddUserToFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('files_model_user', function (Blueprint $table) {
+
+        Schema::create('directories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('files_model_id');
-            $table->integer('user_id');
-            $table->string('short_name');
-            $table->string('local_path');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('name');
+            NestedSet::columns($table);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +33,6 @@ class AddUserToFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files_model_user');
+        Schema::dropIfExists('directories');
     }
 }

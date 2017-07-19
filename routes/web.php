@@ -35,6 +35,32 @@ $app->post('/user/register', function (\Illuminate\Http\Request $request, \Illum
 
     $userModel->save();
 
+    $dir = \App\Models\Directory::create([
+        'name' => 'home',
+        'children' => [
+            [
+                'name' => 'Photos',
+                'children' => [
+                    [
+                        'name' => 'Vacation',
+                    ],
+                ]
+            ],
+            [
+                'name' => 'Videos',
+            ],
+            [
+                'name' => 'Music',
+            ],
+            [
+                'name' => 'Documents',
+            ],
+        ],
+    ]);
+
+    $dir->user_id = $userModel->id;
+    $dir->save();
+
     return $response->setContent($userModel);
 });
 
@@ -48,10 +74,14 @@ $app->group(['prefix' => 'user', "middleware" => "auth"], function() use ($app) 
     $app->group(['prefix' => 'files'], function() use ($app) {
         $app->get("/", "User\\Files@index");
         $app->post("/", "User\\Files@create");
-
-
     });
 
+
+    $app->group(['prefix' => 'directories'], function() use ($app) {
+        $app->get("/", "User\\Directories@index");
+        $app->get("/{id}", "User\\Directories@read");
+
+    });
 
 
 

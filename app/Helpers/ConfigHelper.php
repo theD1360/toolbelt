@@ -13,7 +13,7 @@ class ConfigHelper {
             $this->configModel = new Config;
     }
 
-    public function get($keyval = "%")
+    public function get($keyval = "%", $default = null)
     {
         $keyval = trim($keyval);
         $settings = $this->configModel->where('key', "like", $keyval)->get();
@@ -29,7 +29,12 @@ class ConfigHelper {
 
             return array_combine($keys, $vals);
         }
-        return $settings->first()->value;
+
+        if ($settings->first()) {
+            return $settings->first()->value;
+        }
+
+        return $default;
     }
 
     public function set($keyval, $value)

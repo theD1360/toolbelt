@@ -48,7 +48,7 @@ class Directories
 
 
         $dir = Directory::findOrFail($id);
-        $valid = $dir->isDescendantOf( $user->directory);
+        $valid = $dir->isDescendantOf( $user->directory) ? true : $dir->isRoot();
 
         if (!$valid) {
             return $response->setStatusCode(401);

@@ -43,11 +43,11 @@ class Files
         $file = new File();
         $file->user_id = $user->id;
         $file->directory_id = $request->input('directory_id', $user->directory->first()->id);
-        $file->filename =  $request->input('short_name');
-        $file->origin_path = $request->input('local_path');
-        $file->ipfs_hash = $request->input('ipfs_hash');
+        $file->filename =  $request->input('name');
+        $file->origin_path = $request->input('path');
+        $file->ipfs_hash = $request->input('hash');
         $file->type = $request->input('type');
-        $file->filesize =  $request->input('filesize');
+        $file->filesize =  $request->input('size');
         $file->save();
 
 
